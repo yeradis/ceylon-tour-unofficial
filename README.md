@@ -1,7 +1,5 @@
 # Tour of Ceylon - unofficial 
 
-https://s3.amazonaws.com/titlepages.leanpub.com/ceylon-tour/large?1384112372
-
 [![Tour of Ceylon - Ceylon programming language](https://s3.amazonaws.com/titlepages.leanpub.com/ceylon-tour/large?1384112372)]
 
 Teaser text:

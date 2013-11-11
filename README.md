@@ -2,8 +2,7 @@
 
 [![Tour of Ceylon - Ceylon programming language](https://s3.amazonaws.com/titlepages.leanpub.com/ceylon-tour/large?1384112372)]
 
-Teaser text:
-Ceylon is powerful programming language and platform with a modern SDK designed from scratch with a high modularity core that prioritises readability and predictability controlling the complexity with clarity while providing killer tools.
+>Ceylon is powerful programming language and platform with a modern SDK designed from scratch with a high modularity core that prioritises readability and predictability controlling the complexity with clarity while providing killer tools.
 
 
 This book is just a compilation of the great documentation available at http://ceylon-lang.org/documentation/1.0/tour.

@@ -4,6 +4,13 @@
 
 >Ceylon is powerful programming language and platform with a modern SDK designed from scratch with a high modularity core that prioritises readability and predictability controlling the complexity with clarity while providing killer tools.
 
+You can download the book from [https://leanpub.com/ceylon-tour](https://leanpub.com/ceylon-tour)
+
+Includes three convenient formats
+* PDF (for Mac or PC)
+* EPUB (for iPad, iPhone, and other ebook readers)
+* MOBI (for Kindle)
+
 
 This book is just a compilation of the great documentation available at http://ceylon-lang.org/documentation/1.0/tour.
 

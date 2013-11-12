@@ -82,8 +82,11 @@ its own, a legal program:
 
 ## Running the program from the command line
 
-Let's try it out. Save the above code in the file `./source/hello.ceylon` 
-and then run the following commands:
+Let's try it out. Save the above code in the file `./source/hello.ceylon`.
+
+>You need to make a "source" folder, you can't put the source file directly in the folder from where you'll be running the compiler.
+ 
+Then run the following commands:
 
     ceylon-0.6/bin/ceylon compile source/hello.ceylon
     ceylon-0.6/bin/ceylon run --run hello default

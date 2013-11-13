@@ -36,7 +36,7 @@ to understand, or if you think one of the examples sucks, or if
 you think a section is missing some useful information, please
 [let us know](http://ceylon-lang.org/community/).
 
-## Before you start
+## Before you start {#before_you_start}
 
 If you're using the [command line distribution](http://ceylon-lang.org/download/) to
 try out Ceylon for the first time, we highly recommend you 
@@ -84,7 +84,8 @@ its own, a legal program:
 
 Let's try it out. Save the above code in the file `./source/hello.ceylon`.
 
->You need to make a "source" folder, you can't put the source file directly in the folder from where you'll be running the compiler.
+>You need to make a "source" folder, the Ceylon team advise/prefer the `source` folder convention, don't put the source file directly in the folder from where you'll be running the compiler, but if you would, add `--source=.`, so you could compile files in the current folder (we just don't advise this).
+
  
 Then run the following commands:
 
@@ -112,7 +113,7 @@ outputs usage information about any of the
 try [compiling and running the samples](#before_you_start) if you haven't 
 already.*
 
-### Selecting the JDK
+### Selecting the JDK {#selecting_the_jdk}
 
 Ceylon requires Java 7, so you might need to verify that this is the version
 of Java you're using.
@@ -146,7 +147,7 @@ encoding on the command line like this:
 
 ## Running the program from the IDE
 
-To run the program in [Ceylon IDE](#{page.doc_root}/ide), go to the Ceylon 
+To run the program in [Ceylon IDE](http://ceylon-lang.org/documentation/1.0/ide/), go to the Ceylon 
 perspective, then:
 
 1. create a new project using `File > New > Ceylon Project`, 

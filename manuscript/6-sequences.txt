@@ -35,7 +35,7 @@ As we'll see [later](#comprehensions), the braces may even contain a
 _comprehension_, making them much more powerful than what you see here.
 
 `Iterable` is a subtype of the interface 
-[`Category`](#{site.urls.apidoc_current}/Category.type.html),
+[`Category`](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/Category.type.html),
 so we can use the `in` operator to test if a value is produced by the 
 `Iterable`.
 

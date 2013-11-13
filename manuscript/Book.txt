@@ -13,7 +13,7 @@ mainmatter:
 9-generics.txt
 10-modules.txt
 11-functions.txt
-12-name-arguments.txt
+12-named-arguments.txt
 13-comprehensions.txt
 14-language-module.txt
 15-initialization.txt

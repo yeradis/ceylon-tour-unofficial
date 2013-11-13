@@ -4,19 +4,19 @@ This is the third part of the Tour of Ceylon. In the [previous leg](#classes)
 we learned about classes and [met the concept of an attribute](#classes-abstracting_state_using_attributes). 
 What really makes a class special is that is can hold state&mdash;references 
 to other objects. So it's time to learn more about [attributes](#attributes_and_locals) 
-and [variables](#variables). 
+and [variables](#attributes-control-structures-variables). 
  
 Then we're going to skim over some material about 
 [control structures](#attributes-control-structures-control_structures) 
-  ([`if`](#ok_so_here_are_the...), 
-  [`switch`](#the_switchcase_statement_eliminates_cs...),
-  [`for`](#the_for_loop_has_an...),
-  [`while`](#the_while_loop_is_traditional) and 
-  [`try`](#the_trycatchfinally_statement_works_like...)).
+  ([`if`](#attributes-control-structures-if), 
+  [`switch`](#attributes-control-structures-switch),
+  [`for`](#attributes-control-structures-for),
+  [`while`](#attributes-control-structures-while) and 
+  [`try`](#attributes-control-structures-try)).
 
 {pagebreak}
 
-## Attributes and local values
+## Attributes and local values {#attributes_and_locals}
 
 In Java, a field of a class is quite easily distinguished from a local 
 variable or parameter of a constructor. This distinction is much less
@@ -78,7 +78,7 @@ in the same containing scope. A local value is just an attribute that happens
 to not be captured by anything.
 
 
-## Variables {#variables}
+## Variables {#attributes-control-structures-variables}
 
 Ceylon encourages you to use *immutable* attributes as much as possible. An 
 immutable attribute has its value specified when the object is initialized, 
@@ -181,7 +181,7 @@ ambiguous to the parser.)
 
 OK, so here we go with the examples. 
 
-### `if` {#if}
+### `if` {#attributes-control-structures-if}
 
 The `if/else` statement is totally traditional:
 
@@ -201,13 +201,12 @@ back when we talked about [optional types](#dealing_with_objects_that_arent_ther
 
 We often use the operators `then` and `else` instead of `if`. See below:
 
-    //You can chain an else after a then to reproduce the behavior of C's ternary ?: operator:
-
+    //You can chain an else after a then to reproduce the behavior of C's ternary ?: operator
     String name = !arg.trimmed.empty then arg else "World";
 
 Previous example is from [Operators for handling null values](#basics-operators_for_handling_null_values)
 
-### `switch`
+### `switch` {#attributes-control-structures-switch}
 
 The `switch/case` statement eliminates C's much-criticized "fall through" 
 behavior and irregular syntax:
@@ -224,7 +223,7 @@ We'll have much more to say about `switch` when we discuss
 [enumerated types](#types-enumerated_types).
 
 
-### `assert`
+### `assert` {#attributes-control-structures-assert}
 
 Ceylon also has an `assert` statement:
 
@@ -298,7 +297,7 @@ We often use [comprehensions](#comprehensions) or even
 [higher order functions](#functions-anonymous_functions) instead of
 `for`.
 
-### `while`
+### `while` {#attributes-control-structures-while}
 
 The `while` loop is traditional.
 
@@ -309,7 +308,7 @@ The `while` loop is traditional.
 
 There is no `do/while` statement.
 
-### `try`
+### `try` {#attributes-control-structures-try}
 
 The `try/catch/finally` statement works just like Java's:
 

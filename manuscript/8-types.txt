@@ -183,7 +183,27 @@ solved using the "visitor" pattern.
 
 Let's consider the following tree visitor implementation:
 
-    printTree(Branch(Branch(Leaf("aap"), Leaf("noot")), Leaf("mies")));
+    abstract class Node() {
+        shared formal void accept(Visitor v);
+    }
+    
+    class Leaf(shared Object element) 
+            extends Node() {
+        accept(Visitor v) => v.visitLeaf(this);
+    }
+    
+    class Branch(shared Node left, shared Node right) 
+            extends Node() {
+        accept(Visitor v) => v.visitBranch(this);
+    }
+    
+    interface Visitor {
+        shared formal void visitLeaf(Leaf l);
+        shared formal void visitBranch(Branch b);
+    }
+
+We can create a method which prints out the tree by implementing the `Visitor` 
+interface:
 
     void printTree(Node node) {
         object printVisitor satisfies Visitor {
@@ -217,8 +237,6 @@ enumerating the subtypes of `Node` in its definition, and using a `switch`:
 
 Our `print()` method is now much simpler, but still has the desired behavior 
 of "breaking" when a new subtype of `Node` is added.
-
-    printTree(Branch(Branch(Leaf("aap"), Leaf("noot")), Leaf("mies")));
 
     void printTree(Node node) {
         switch (node)

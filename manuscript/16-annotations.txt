@@ -115,7 +115,7 @@ annotation type must be a subtype of `ConstrainedAnnotation`:
             given Value satisfies Annotation<Value>
             given ProgramElement satisfies Annotated {
         
-        "Can this annotation can occur on the given program 
+        "Can this annotation occur on the given program 
          element?"
         shared Boolean occurs(Annotated programElement) =>
                 programElement is ProgramElement;
@@ -170,7 +170,7 @@ constrains the kinds of program elements at which the annotation can occur.
 The argument to `ProgramElement` must be a metamodel type. So the argument 
 `InterfaceDeclaration|AliasDeclaration` would constrain the annotation to occur 
 only at interface and `alias` declarations. The argument `ValueDeclaration` would 
-constrain the annotation to occur only value or attribute declarations.
+constrain the annotation to occur only at value or attribute declarations.
 
 
 ## Restrictions on annotation parameters and annotation arguments
@@ -379,11 +379,9 @@ the topic is outside of the scope of this tour.
 
 ## There's more ...
 
-Well actually, we've finished the tour! Of course, there's still plenty of 
-scope for you to explore Ceylon on your own. You should now know enough to 
-start writing Ceylon code for yourself, and start getting to know the 
-platform modules.
+You can learn more about the metamodel from its 
+[API documentation](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/meta/index.html).
 
-Alternatively, if you want to keep reading you can browse the 
-[reference documentation](http://ceylon-lang.org/documentation/1.0/reference/) or (if you're sitting 
-comfortably) read the [specification](http://ceylon-lang.org/documentation/current/spec/html_single/index.html).
+The last two chapters of this tour deal with interoperation with other
+languages, first with [Java](#interop), and then with dynamically
+typed [JavaScript](#dynamic).

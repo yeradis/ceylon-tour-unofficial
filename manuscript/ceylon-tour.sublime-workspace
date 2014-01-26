@@ -1,0 +1,236 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"h",
+				"h1	Tag"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "18\nreaders\n149\npages\n29,330\nwords\n100%\ncomplete\nBook language:\nEnglish\nUpdated\n2 days ago\n\n\nTour of Ceylon - unofficial book new version  now available - http://kcy.me/v0od #ceylonlang #programming /cc @ceylonlang",
+			"settings":
+			{
+				"buffer_size": 213,
+				"line_ending": "Unix",
+				"name": "18"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/14-language-module.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/quick-intro.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/3-attributes-control-structures.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/6-sequences.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/1-basics.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/4-inheritance.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/0-index.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/introduction.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/17-interceptors.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/16-annotations.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/15-initialization.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/13-comprehensions.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/12-named-arguments.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/11-functions.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/10-modules.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/9-generics.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/8-types.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/7-typeinference.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/5-anonymous-member-classes.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/2-classes.txt",
+		"/Users/yeradis/Library/Application Support/Sublime Text 2/Packages/MarkdownEditing/README.md",
+		"/Users/yeradis/Library/Application Support/Sublime Text 2/Packages/MarkdownEditing/Markdown.sublime-settings",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/index.txt",
+		"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript/Book.txt",
+		"/Users/yeradis/Desktop/PROJECTS/yeradis.github.com/atom.xml",
+		"/Users/yeradis/Desktop/test.txt"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 111.0,
+		"where_history":
+		[
+			"/Users/yeradis/Documents/Dropbox/ceylon-tour",
+			"/Users/yeradis/Documents/Dropbox/ceylon-tour/manuscript",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ok_so_here_are_the...'",
+			"{site.urls.apidoc_current}",
+			"{page.doc_root}",
+			"he_trycatchfinally_statement_works_like...",
+			"#variables",
+			"attributes-control-structures-for",
+			"while loop",
+			"the while loop is traditional",
+			"attributes_and_locals",
+			"before_you_start",
+			"You can chain an else after a then to reproduce the behavior of C",
+			"http://modules.ceylon-lang.org/test/ceylon/language/0.6/module-doc",
+			"comprehen",
+			"#inheritance-interfaces_and_mixin_inheritance",
+			"syntax sugar",
+			"syntax sugar ",
+			"syntax sugar",
+			"variadic parameters",
+			"#attributes-control-structures-control_structures",
+			"interfaces and",
+			"control structures",
+			")",
+			"(/documentation/1.0/tour/",
+			"erjjones",
+			"ericjones",
+			"jones",
+			"Posts Tagged",
+			"erjjones"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc",
+			".txt",
+			"",
+			"yeradis",
+			"erjjones",
+			"\">\n",
+			"yeradis"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"settings":
+					{
+						"buffer_size": 213,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								213,
+								173
+							]
+						],
+						"settings":
+						{
+							"auto_name": "18",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 37.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 224.0,
+	"status_bar_visible": true
+}

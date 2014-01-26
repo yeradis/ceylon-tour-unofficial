@@ -18,3 +18,5 @@ mainmatter:
 14-language-module.txt
 15-initialization.txt
 16-annotations.txt
+17-interop.txt
+18-dynamic.txt

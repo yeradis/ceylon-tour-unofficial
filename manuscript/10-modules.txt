@@ -14,7 +14,7 @@ There's no `package` statement in Ceylon source files. The compiler determines
 the package and module to which a toplevel program element belongs by the 
 location of the source file in which it is declared. A class named `Hello` in 
 the package `org.jboss.hello` must be defined in the file 
-`org/jboss/hello/Hello.ceylon`.
+`source/org/jboss/hello/Hello.ceylon` where `source` is the source directory.
 
 When a source file in one package refers to a toplevel program element in 
 another package, it must explicitly import that program element. Ceylon, 
@@ -38,8 +38,8 @@ To resolve a name conflict, we can rename an imported declaration:
 
     import com.redhat.polar.core { PolarCoord=Polar }
 
-We think renaming is a much cleaner solution than the use of qualified names.
-We can even rename members of type:
+We think renaming is a much cleaner solution than the use of qualified 
+names. We can even rename members of type:
 
     import com.redhat.polar.core { Polar { r=radius, theta=angle } }
 
@@ -47,69 +47,107 @@ Now here's a big gotcha for folks new to Ceylon.
 
 ### Gotcha!
 
-As we're about to see, importing a program element from a different module is 
-_always_ a two step process: 
+As we're about to see, importing a program element from a different 
+module is _always_ a two step process: 
 
-1. _import the module_ containing the program element in the module descriptor
-   of the module containing the source file, and then
+1. _import the module_ containing the program element in the module 
+   descriptor (`module.ceylon` file) of the module containing the 
+   source file, and then
 2. _import the program element_ in the source file.
 
 One `import` statement is not enough!
 
-In particular, this means that you _simply can't_ import a program element 
-defined in a module when you're playing around with code occurring outside
-a well-defined module (code in the "default" module).
+In particular, this means that you _simply can't_ import a program 
+element defined in a module when you're playing around with code 
+occurring outside a well-defined module (code in the "default" module).
 
-With that in mind, it's definitely time to learn how to define modules and
-dependencies between modules.
+With that in mind, it's definitely time to learn how to define modules 
+and dependencies between modules.
 
 
-## Modules
+## Modularity
 
-Built-in support for modularity is a major goal of the Ceylon project, but 
-what does 'modularity' mean? There are several layers to this:
+Modularity is of central importance to the Ceylon language. But what 
+does this word even mean? Well, a program is modular if it's composed
+of more than one module. Separate modules are:
 
-* Language-level support for a unit of visibility that is bigger than a package, 
-  but smaller than "all packages".
+- independently distributed,
+- maintained by different teams, and
+- released according to independent schedules.
+
+Therefore, we can often identify the modules that comprise our program 
+by looking at how the program is maintained, released, and distributed.
+
+A module has:
+
+- has a well-defined public API, and an inaccessible internal 
+  implementation,
+- a well-defined version, and
+- well-defined dependencies upon versions of collaborating modules.
+
+
+## The module system
+
+There are several layers to the module system in Ceylon:
+
+* Language-level support for a unit of visibility that is bigger than a 
+  package, but smaller than "all packages".
 * A module descriptor format that expresses dependencies between specific 
   versions of modules.
 * A built-in module archive format and module repository layout that is 
-  understood by all tools written for the language, from the compiler, to the 
-  IDE, to the runtime.
-* A runtime that features peer-to-peer classloading (one classloader 
-  per module) and the ability to manage multiple versions of the same module.
+  understood by all tools written for the language, from the compiler, 
+  to the IDE, to the runtime.
+* A runtime that features peer-to-peer classloading (one classloader per 
+  module) and the ability to manage multiple versions of the same module.
 * An ecosystem of remote module repositories where folks can share code 
   with others.
 
+Ceylon's module system has two levels of granularity: packages and modules.
+Each package within a module has its own namespace and well-defined API.
+For many simple modules, this is overkill, and thus it's perfectly 
+acceptable for a module to have just one package. But more complex
+modules, with their own internal subsystems, often benefit from the 
+additional level of granularity.
 
-## Module-level visibility
+
+## Module-level visibility and package descriptors
 
 A package in Ceylon may be shared or unshared. An unshared package 
 (the default) is visible only to the module which contains the package. 
-We can make the package shared by providing a package descriptor:
+We can make the package shared by providing a _package descriptor_:
 
     "The typesafe query API."
     shared package org.hibernate.query;
 
-A `shared` package defines part of the "public" API of the module. Other modules 
-can directly access shared declarations in a `shared` package.
+A `shared` package defines part of the "public" API of the module. Other 
+modules can directly access shared declarations in a `shared` package.
+
+A package descriptor must be defined in a source file named `package.ceylon`
+placed in the same directory as the other source files for the package. In
+this case, the package descriptor must occur in the file 
+`source/org/hibernate/query/package.ceylon.`
 
 
-## Module descriptors {#modules-module_descriptors}
+## Dependencies and module descriptors {#modules-module_descriptors}
 
 A module must explicitly specify the other modules on which it depends.
-This is accomplished via a module descriptor:
+This is accomplished via a _module descriptor_:
  
     "The best-ever ORM solution!"
     license "http://www.gnu.org/licenses/lgpl.html"
     module org.hibernate "3.0.0.beta" {
-        import ceylon.collection "0.6.1";
+        import ceylon.collection "1.0.0";
         import java.base "7";
         shared import java.jdbc "7";
     }
 
 A module `import` annotated `shared` is implicitly inherited by every
 module which imports the module with the `shared` module `import`.
+
+A module descriptor must be defined in a source file named `module.ceylon`
+placed in the same directory as the other source files for the root package
+of the module. In this case, the module descriptor must occur in the file 
+`source/org/hibernate/module.ceylon.`
 
 ## Module archives and module repositories
 
@@ -135,11 +173,28 @@ archives, and module documentation directories.
 To get started with modules in Ceylon IDE, go to `Help > Cheat Sheets...`, 
 open the `Ceylon` item, and run the `Introduction to Ceylon Modules` cheat sheet, 
 which will guide you step-by-step through the process of creating a module,
-defining its dependencies, and exporting it to a module repository.  
+defining its dependencies, and exporting it to a module repository.
+
+The Ceylon Repository Explorer may be accessed via 
+`Window > Show View > Ceylon Repository Explorer` when in the Ceylon
+perspective.  
+
+A wizard to create a new module, and add its dependencies can be found
+at `File > New > Ceylon Module`.
+
+To change the imports of an existing module, you can select the module 
+in the Ceylon Explorer, got to `File > Properties`, and select the
+`Ceylon Module` properties page.
+
+Under `File > Export... > Ceylon`, you'll find two very useful wizards:
+
+- a wizard to export a Ceylon module defined in a workspace project to
+  a local module repository, and
+- a wizard to add a Java `.jar` archive to a Ceylon module repository.
 
 ### Examples: Compiling against a local or remote repository
 
-Let's suppose you are are writing `net.example.foo`. Your project 
+Let's suppose you are writing `net.example.foo`. Your project 
 directory might be layed out like this:
 
     README
@@ -163,7 +218,7 @@ you can compile using the command
     
 This command will compile the source code files (`Foo.ceylon` and `FooService.ceylon`)
 into a module archive and publish it to the default output repository, `modules`.
-(you'd use the `--out build` option to publish to `build` instead)). Now your project 
+(you'd use the `--out build` option to publish to `build` instead). Now your project 
 directory looks something like this:
 
     README
@@ -226,7 +281,7 @@ the Herd is one of the default repositories `ceylon compile` knows about. So if
     ceylon compile net.example.foo
 
 (that's right, it's the same as before). By the way, you can disable the default 
-repositories with the `--d` option if you want to.
+repositories with the `--no-default-repositories` option if you want to.
 
 If `com.example.bar/3.1.4` were in *another* repository, say `http://repo.example.com`,
 then the command would become
@@ -286,7 +341,7 @@ top level `process` object):
       my options
 
 If one of the dependencies isn't available from a default repository you will 
-need to specify a repository that contains it using another `-rep`:
+need to specify a repository that contains it using another `--rep`:
 
     ceylon run
       --rep http://ceylon.example.net/repo

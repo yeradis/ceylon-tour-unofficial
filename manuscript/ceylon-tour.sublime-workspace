@@ -19,6 +19,49 @@
 				"line_ending": "Unix",
 				"name": "18"
 			}
+		},
+		{
+			"file": "/Users/yeradis/Desktop/PROJECTS/CORDOVA/movciudadano/www/index.html",
+			"settings":
+			{
+				"buffer_size": 1767,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "# Annotations and the metamodel {#annotations}\n\nWow, part sixteen of the Tour of Ceylon and the end is in sight! The \n[last part](#initialization) covered initialization. This part is all \nabout *annotations* and metaprogramming.\n\n{pagebreak}\n\n## Annotations\n\nIf you've made it this far into this series of articles, you've already seen \nlots of annotations. Annotations are *so* important in Ceylon that it's \nextremely difficult to write any code without using them. But we have not \nyet really explored what an annotation *is*.\n\nLet's finally rectify that. The answer is simple: an annotation is a toplevel \nfunction that returns a subtype of \n[`ConstrainedAnnotation`](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/ConstrainedAnnotation.type.html).\nWe call the function an _annotation constructor_.\n\n## Annotation constructors\n\nHere's the definition of a some of our old friends, `doc`:\n\n    \"Annotation to specify API documentation of a program\n     element.\" \n    shared annotation DocAnnotation doc(String description) =>\n            DocAnnotation(description);\n\nAnd `by`:\n\n    \"Annotation to specify API authors.\"\n    shared annotation AuthorsAnnotation by(String* authors) =>\n            AuthorsAnnotation(*authors);\n\nOf course, we can define our own annotations. (That's the whole point!)\n\n    shared annotation ScopeAnnotation scope(Scope s) => ScopeAnnotation(s);\n\nOr:\n\n    shared annotation TodoAnnotation todo(String text) => TodoAnnotation(text);\n\nSince annotation constructors are functions, annotation names always begin \nwith a lowercase letter.\n\n\n## Annotation arguments\n\nWhen we specify an annotation with a non-empty parameter list on a program \nelement, we need to specify arguments for the parameters of the annotation. \nJust like with a normal method invocation, we have the choice between a\npositional argument list or a named argument list. We could write:\n\n    doc (\"The Hello World program\")\n\nOr:\n\n    doc { description=\"The Hello World program\"; }\n\nLikewise, we could write:\n\n    by (\"Gavin\", \"Stephane\", \"Emmanuel\", \"Tom\", \"Tako\")\n\nOr:\n\n    by { authors=[\"Gavin\", \"Stephane\", \"Emmanuel\", \"Tom\", \"Tako\"]; }\n\nIf an annotation has no arguments, we can just write the annotation name \nand leave it at that. We do this all the time with annotations like `shared`, \n`formal`, `default`, `actual`, `abstract`, `deprecated`, and `variable`.\n\n\n## Annotation types\n\nThe return type of an annotation constructor is called the *annotation type*.\nThe `doc` annotation produces a `DocAnnotation`:\n\n    \"The annotation class for the [[doc]] annotation.\"\n    shared final annotation class DocAnnotation(shared String description)\n            satisfies OptionalAnnotation<DocAnnotation, Annotated> {}\n\nThe `by` annotation produces `AuthorsAnnotation`:\n\n    \"The annotation class for [[by]].\"\n    shared final annotation class AuthorsAnnotation(shared String* authors)\n            satisfies OptionalAnnotation<AuthorsAnnotation, Annotated> {}\n\nNaturally, we can define our own annotation types:\n\n    shared final annotation class TodoAnnotation(String text)\n            satisfies SequencedAnnotation<TodoAnnotation> {\n        string => text;\n    }\n\nOr:\n\n    shared final annotation class ScopeAnnotation(shared Scope scope)\n            satisfies OptionalAnnotation<ScopeAnnotation, ClassDeclaration> {\n        string => (scope==request then \"request\")\n             else (scope==session then \"session\")\n             else (scope==application then \"application\")\n             else nothing;\n    }\n\nMultiple annotation constructors may produce the same annotation type. An \nannotation type must be a subtype of `ConstrainedAnnotation`:\n\n    \"An annotation. This interface encodes constraints upon \n     the annotation in its type arguments.\"\n    shared interface ConstrainedAnnotation<out Value, out Values, \n                    in ProgramElement> \n            of Value\n            satisfies Annotation<Value>\n            given Value satisfies Annotation<Value>\n            given ProgramElement satisfies Annotated {\n        \n        \"Can this annotation occur on the given program \n         element?\"\n        shared Boolean occurs(Annotated programElement) =>\n                programElement is ProgramElement;\n        \n    }\n\nThe type arguments of this interface express constraints upon how annotations \nwhich return the annotation type occur. The first type parameter, `Value`, is \nsimply the annotation type itself.\n\n\n## Annotation constraints\n\nThe second type parameter, `Values`, governs how many different annotations \nof given program element may return the annotation type. Ceylon provides two \nsubtypes of `ConstrainedAnnotation` that will be useful for the most common \ncases:\n\n* If an annotation type is a subtype of \n  [`OptionalAnnotation`](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/OptionalAnnotation.type.html), \n  at most one annotation of a given program element may be of this annotation \n  type, or, otherwise\n* if an annotation type is a subtype of \n  [`SequencedAnnotation`](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/SequencedAnnotation.type.html),\n  more than one annotation of a given program element may be of this annotation \n  type.\n\nWhere `OptionalAnnotation` is defined in the language module:\n\n    \"An annotation that may occur at most once\n     at a single program element.\"\n    shared interface OptionalAnnotation<out Value, \n                    in ProgramElement=Annotated>\n            of Value\n            satisfies ConstrainedAnnotation<Value,Value?,ProgramElement>\n            given Value satisfies Annotation<Value>\n            given ProgramElement satisfies Annotated {}\n\nAlong with `SequencedAnnotation`:\n\n    \"An annotation that may occur multiple times\n     at a single program element.\"\n    shared interface SequencedAnnotation<out Value, \n                    in ProgramElement=Annotated>\n            of Value\n            satisfies ConstrainedAnnotation<Value,Value[],ProgramElement>\n            given Value satisfies Annotation<Value>\n            given ProgramElement satisfies Annotated {}\n\nFinally, the third type parameter, `ProgramElement`, of `ConstrainedAnnotation`\nconstrains the kinds of program elements at which the annotation can occur. \nThe argument to `ProgramElement` must be a metamodel type. So the argument \n`InterfaceDeclaration|AliasDeclaration` would constrain the annotation to occur \nonly at interface and `alias` declarations. The argument `ValueDeclaration` would \nconstrain the annotation to occur only at value or attribute declarations.\n\n\n## Restrictions on annotation parameters and annotation arguments\n\nThe specification defines a number of restrictions on annotation parameter\ntypes:\n\n> Each parameter of an annotation constructor [or initializer parameter of an \n> annotation type] must have one of the following types:\n>\n> - `Integer`, `Float`, `Character`, or `String`,\n> - an enumerated type whose cases are all anonymous classes, such as `Boolean`,\n> - a subtype of `Declaration` in `ceylon.language.model.declaration`,\n> -  an annotation type,\n> - `{T*}` or `[T*]` where `T` is a legal annotation constructor parameter type, \n>   or\n> - any tuple type whose element types are legal annotation constructor parameter \n>   types.\n\nFurthermore: \n\n- an annotation type can't contain initialization logic or reference declarations\n  (it must have an empty initializer section), and \n- an annotation constructor can't contain multiple statements (it must simply \n  instantiate and return an annotation type).\n\nFinally, an annotation argument may contain only:\n\n- literal strings, characters, integers, and floats, \n- references to toplevel anonymous classes (for example, `true`), \n- program element reference expressions (for example, `` `interface List` ``, or \n  `` `function sum` ``), and\n- iterable and tuple enumerations (`{ ... }` and `[ ... ]`) containing legal \n  annotation arguments.  \n\nSome of these restrictions will likely be relaxed in future versions of the \nlanguage.\n\n\n## Reading annotation values at runtime\n\nAnnotation values may be obtained by calling the toplevel method \n[`annotations()`](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/meta/index.html#annotations) defined in the language module.\n\n    shared native Values annotations<Value,Values,ProgramElement>(\n                  Class<ConstrainedAnnotation<Value,Values,ProgramElement>> \n                  annotationType,\n                  ProgramElement programElement)\n               given Value satisfies \n                       ConstrainedAnnotation<Value,Values,ProgramElement>\n               given ProgramElement satisfies Annotated;\n\nSo to obtain the value of the `doc` annotation of the `Person` class, we \nwrite:\n\n    String? description = annotations(`DocAnnotation`, \n                `class Person`)?.description;\n\nNote that the expression `` `DocAnnotation` `` returns the metamodel object \nfor the type `DocAnnotation`, an instance of `Class<DocAnnotation,[String]>`. \nThe expression `` `class Person` `` returns the reference object for the \nprogram element `Person`, a `ClassDeclaration`.\n\nTo determine if the method `stop()` of a class named `Thread` is deprecated, \nwe can write:\n\n    Boolean deprecated = annotations(`DeprecationAnnotation`, \n                `function Thread.stop`) exists;\n\nNote that the expression `` `function Thread.stop` `` returns the reference \nobject for the method `stop()` of `Thread`, an instance of `FunctionDeclaration`.\n\nHere are two more examples, to make sure you get the idea:\n\n    Scope scope = annotations(`ScopeAnnotation`, `class Person`)?.scope else request;\n\n    String[] todos = annotations(`TodoAnnotation`, `function method`)*.text;\n\nEverything's set up so that `annotations()` returns `ScopeAnnotation?` for the \noptional annotation type `ScopeAnnotation`, and `TodoAnnotation[]` for the \nsequenced annotation type `TodoAnnotation`.\n\n## Defining annotations\n\nWe've seen plenty of examples of annotations built into Ceylon. Application \ndevelopers don't often define their own annotations, but framework developers \ndo this all the time. Let's see how we could define an annotation for \ndeclarative transaction management in Ceylon.\n\n    shared annotation TransactionalAnnotation transactional\n            (Boolean requiresNew = false)\n        => TransactionalAnnotation(requiresNew);\n\nThis method simply produces an instance of the class `TransactionalAnnotation` \nthat will be attached to the metamodel of an annotated method or attribute. \nThe meta-annotation specifies that the annotation may be applied to methods \nand attributes, and may occur at most once on any member.\n\n    shared final annotation class TransactionalAnnotation(requiresNew)\n            satisfies OptionalAnnotation<TransactionalAnnotation,\n                            FunctionDeclaration|ValueDeclaration> {\n        shared Boolean requiresNew;\n    }\n\nNow we can apply our annotation to a method of any class.\n\n    shared class OrderManager() {\n        shared transactional void createOrder(Order order) { ... }\n        ...\n    }\n\nWe could specify an explicit argument to the parameter of transactional using \na positional argument list:\n\n    shared transactional (true)\n    void createOrder(Order order) { ... }\n\nAlternatively, we could use a named argument list:\n\n    shared transactional { requiresNew=true; }\n    void createOrder(Order order) { ... }\n\n## The metamodel\n\nThe Ceylon metamodel is an API that allows a program to interact with its\nown program elements and the types they define at runtime. This capability\nis commonly called _reflection_ or _introspection_ in other languages.\nReflection makes possible _runtime metaprogramming_.\n\n_Note: Ceylon does not support any form of compile-time metaprogramming._\n\nIn fact, the Ceylon metamodel is divided into two separate APIs:\n\n- `ceylon.language.model.declaration` defines a _detyped_ model of \n  declarations, packages, and modules, while \n- `ceylon.language.model` defines a statically typed model of types and\n  typed declarations.\n\nThe language provides a built-in syntax for obtaining the metamodel for\na program element. All metamodel expressions are enclosed in backticks.\n\nA program element reference expression specifies the fully-qualified name \nof the program element, and a keyword indicating the kind of program \nelement it is. We've already seen a few examples of this syntax in `see` \nand `throws` annotations:\n\n    `class Singleton`\n    `interface List`\n    `function Iterable.map`\n    `function sum`\n    `alias Number`\n    `value Iterable.size`\n    `given Element`\n    `module ceylon.language`\n    `package ceylon.language.model`\n\nReference expressions produce an instance of a subtype of `Declaration`,\nfor example, a reference to a `class` is of type `ClassDeclaration`, and\na reference to a `function` is of type `FunctionDeclaration`. They're\nespecially useful for defining cross-references between program elements\nin annotations.\n\nA typed metamodel expression specifies a type or fully-typed function or\nvalue. No keyword is necessary. By \"fully-typed\", I mean that type \narguments must be provided to all type parameters of a generic type or \nfunction. For example:\n\n    `Singleton<String>`\n    `List<Float|Integer>`\n    `{Object+}`\n    `{Anything*}.map<String>`\n    `sum<Float>`\n    `{String*}.size`\n    `[Float,Float,String]`\n    `Float|Integer`\n    `Element`\n\nA typed metamodel expression evaluates to a metamodel object whose static\ntype captures the type of the referenced program element. For example:\n\n- `Singleton<String>` is of type `Class<Singleton<String>,[String]>`,\n- `{Anything*}.map<String>` is of type \n  `Method<{Anything*},{String*},[String(Anything)]>`, and\n- `Float|Integer` is of type `UnionType<Float|Integer>`.\n\nThus, we can interact with our program at the meta level without losing\nthe benefits of static typing. For example, I can write a generic function\nlike the following:\n\n    T createTriple<T,E>(Class<T,[E,E,E]> c, Function<E,[Integer]> e)\n            => c(e(0),e(1),e(2)); \n\nAnd use it like this:\n\n    Integer isqr(Integer i) => i*i;\n    class Triple<T>(T t0, T t1, T t2) {}\n    \n    Triple<Integer> triple = createTriple(`Triple<Integer>`, `sqr`)\n\nOK, sure, that's a very contrived example, and doesn't demonstrate\nanything that we couldn't do more efficiently with function references.\nRuntime metaprogramming is primarily intended to ease the development of\nframeworks and libraries for Ceylon, and therefore further discussion of\nthe topic is outside of the scope of this tour.\n\n\n## There's more ...\n\nYou can learn more about the metamodel from its \n[API documentation](http://modules.ceylon-lang.org/repo/1/ceylon/language/1.0.0/module-doc/meta/index.html).\n\nThe last two chapters of this tour deal with interoperation with other languages, first with [Java](#interop), and then with dynamically typed [JavaScript](#dynamic).",
+			"file": "16-annotations.txt",
+			"file_size": 14949,
+			"file_write_time": 1390694615000000,
+			"settings":
+			{
+				"buffer_size": 14949,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "17-interop.txt",
+			"settings":
+			{
+				"buffer_size": 7604,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "18-dynamic.txt",
+			"settings":
+			{
+				"buffer_size": 2958,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Book.txt",
+			"settings":
+			{
+				"buffer_size": 399,
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -78,7 +121,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 111.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"/Users/yeradis/Documents/Dropbox/ceylon-tour",
@@ -143,7 +186,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -157,14 +200,152 @@
 						"selection":
 						[
 							[
-								213,
-								173
+								92,
+								213
 							]
 						],
 						"settings":
 						{
 							"auto_name": "18",
 							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Users/yeradis/Desktop/PROJECTS/CORDOVA/movciudadano/www/index.html",
+					"settings":
+					{
+						"buffer_size": 1767,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 379.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "16-annotations.txt",
+					"settings":
+					{
+						"buffer_size": 14949,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14948,
+								14783
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 10899.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "17-interop.txt",
+					"settings":
+					{
+						"buffer_size": 7604,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								692,
+								681
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "18-dynamic.txt",
+					"settings":
+					{
+						"buffer_size": 2958,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2957,
+								2957
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1679.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Book.txt",
+					"settings":
+					{
+						"buffer_size": 399,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								399,
+								399
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -206,6 +387,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.markdown":
+	{
+		"height": 160.0
+	},
 	"replace":
 	{
 		"height": 64.0
